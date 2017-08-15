@@ -1,0 +1,12 @@
+<!--create_post.html-->
+{% extends 'base.html' %}
+{% block title %}写文章{% endblock %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block page_content %}
+	{{ wtf.quick_form(post_form) }}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}

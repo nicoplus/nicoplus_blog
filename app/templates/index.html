@@ -1,0 +1,42 @@
+<!--index.html-->
+{% extends 'base.html' %}
+{% block page_content %}
+
+<div id='mansory' class="row">
+{% for post in posts %}
+	<div class="thumbnail" data-order='{{ post.id }}'>
+		<img src="{{ post.image }}">
+		<div class="caption">
+			<h4><a href="{{ url_for('main.post', id=post.id) }}">{{post.title}}</a></h4>
+			<p>{{ post.body|truncate(30) }}</p>
+		</div>
+	</div>
+{% endfor %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src='{{ url_for('static', filename='js/mp.mansory.js') }}'></script>
+<script>
+	var log = console.log.bind(console);
+	$(document).ready(function(){
+		//瀑布流mansory
+		$('#mansory').mpmansory({
+		  childrenClass: '', // default is a div
+	      columnClasses: '', //add classes to items
+	      breakpoints:{
+	        lg: 3, 
+	        md: 4, 
+	        sm: 6,
+	        xs: 12
+	      },
+	      distributeBy: { order: false, height: false, attr: 'data-order', attrOrder: '-asc' }, 
+	      onload: function (items) {
+	        //make somthing with items
+		  }
+		});
+	});
+</script>
+{% endblock %}
