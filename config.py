@@ -7,7 +7,6 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-
     @staticmethod
     def init_app(app):
         pass
@@ -20,11 +19,12 @@ class DevelopmentConfig(Config):
 
 class TestConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://nicoplus:jc1992@localhost/blogtest'  # 未创建
+    SQLALCHEMY_DATABASE_URI = 'postgresql://nicoplus:jc1992@localhost/blogtest'
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql://nicoplus:jc1992@localhost/blog'  # 未创建
+    FLASK_ADMIN = os.environ.get('FLASK_ADMIN')#运行时，需在虚拟环境activate脚本中写入
+    SQLALCHEMY_DATABASE_URI = 'postgresql://nicoplus:jc1992@localhost/blog'# 未创建
 
 
 config = {
