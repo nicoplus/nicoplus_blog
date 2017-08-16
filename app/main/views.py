@@ -1,10 +1,11 @@
 from flask import render_template, redirect, url_for, request
 from flask_login import login_required
 
-from app.models import Post, User
+from app.models import Post, User, Permissions
 from . import main
 from app.main.forms import PostForm
 from app.extension import db
+from app.decorators import permission_required
 
 
 @main.after_app_request
@@ -36,6 +37,7 @@ def index():
 
 @main.route('/edit_post/', methods=['GET', 'POST'])
 @login_required
+@permission_required(Permissions.WRITE_ARTICLES)
 def edit_post():
     post_form = PostForm()
     if post_form.validate_on_submit():
