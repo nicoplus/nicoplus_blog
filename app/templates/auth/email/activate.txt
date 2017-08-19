@@ -1,0 +1,6 @@
+{{ user.username }}, 您好：
+	感谢您注册Nicoplus Blog.
+	请点击链接激活您的账户：
+	{{ url_for('auth.activate', token=token, _external=True) }}
+	链接有效期为1小时。
+											祝好。

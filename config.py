@@ -7,6 +7,8 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     FLASK_ADMIN = os.environ.get('FLASK_ADMIN', None)
+    FLASK_MAIL_SUBJECT_PREFIX = '[Nicoplus Blog]'
+    FLASK_MAIL_SENDER = 'nicoplus@qq.com'
 
     @staticmethod
     def init_app(app):
@@ -16,6 +18,11 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://nicoplus:jc1992@localhost/blogdev'
+    MAIL_SERVER = 'smtp.qq.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or 'nicoplus@qq.com'
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or 'vjnlmcjpzisabibf'
 
 
 class TestConfig(Config):
@@ -24,7 +31,7 @@ class TestConfig(Config):
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql://nicoplus:jc1992@localhost/blog'# 未创建
+    SQLALCHEMY_DATABASE_URI = 'postgresql://nicoplus:jc1992@localhost/blog'  # 未创建
 
 
 config = {

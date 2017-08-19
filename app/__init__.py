@@ -1,6 +1,6 @@
 from flask import Flask
 
-from app.extension import bootstrap, toolbar, db, pagedown, login_manager
+from app.extension import bootstrap, toolbar, db, pagedown, login_manager, mail
 from config import config
 
 
@@ -14,6 +14,7 @@ def create_app(config_name):
     db.init_app(app)
     pagedown.init_app(app)
     login_manager.init_app(app)
+    mail.init_app(app)
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)

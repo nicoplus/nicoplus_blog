@@ -8,6 +8,7 @@ from flask_login import UserMixin, AnonymousUserMixin
 from app.extension import login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import current_app
+from itsdangerous import TimedJSONWebSignatureSerializer
 
 
 @login_manager.user_loader
@@ -60,6 +61,7 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    active = db.Column(db.Boolean, default=False)
     role_id = db.Column('Role', db.ForeignKey('roles.id'))
 
     def __init__(self, **kws):
@@ -72,6 +74,25 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return '<User:{}>'.format(self.username)
+
+    def generate_activation_token(self, expiration=3600):
+        s = TimedJSONWebSignatureSerializer(
+            current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'activation': self.id})
+
+    def activate(self, token):
+        s = TimedJSONWebSignatureSerializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+            #print('data----------', data)
+        except Exception as e:
+            return False
+        if data.get('activation') != self.id:
+            #print('不匹配', data.get('activation'), self.id)
+            return False
+        self.active = True
+        db.session.add(self)
+        return True
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)

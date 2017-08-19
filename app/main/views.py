@@ -28,9 +28,10 @@ def session_remove(exception=None):
 def post_datetime(datetime):
     return datetime.strftime('%Y-%m-%d %H:%M')
 
+
 @main.app_context_processor
 def inject_permissions():
-	return dict(Permissions=Permissions)
+    return dict(Permissions=Permissions)
 
 
 @main.route('/', methods=['GET'])

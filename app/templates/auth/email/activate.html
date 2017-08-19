@@ -1,0 +1,7 @@
+<p>{{ user.username }}, 您好：</p>
+<p>    感谢您注册<b>Nicoplus Blog</b>.</p>
+<p>请点击链接激活您的账户：<a href="{{ url_for('auth.activate', token=token, _external=True) }}
+">链接</a></p>
+<p>链接有效期为1小时。</p>
+<p>                   祝好。</p>
+					
