@@ -8,7 +8,7 @@ from flask import abort
 
 def permission_required(permission):
     def decorator(f):
-        @wraps
+        @wraps(f)
         def decorator_func(*args, **kws):
             if not current_user.can(permission):
                 abort(403)

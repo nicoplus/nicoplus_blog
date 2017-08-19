@@ -28,6 +28,10 @@ def session_remove(exception=None):
 def post_datetime(datetime):
     return datetime.strftime('%Y-%m-%d %H:%M')
 
+@main.app_context_processor
+def inject_permissions():
+	return dict(Permissions=Permissions)
+
 
 @main.route('/', methods=['GET'])
 def index():
@@ -35,7 +39,7 @@ def index():
     return render_template('index.html', posts=posts)
 
 
-@main.route('/edit_post/', methods=['GET', 'POST'])
+@main.route('/edit_post', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permissions.WRITE_ARTICLES)
 def edit_post():

@@ -48,6 +48,9 @@ class Role(db.Model):
             db.session.add(role)
         db.session.commit()
 
+    def __repr__(self):
+        return '<Role: {}>'.format(self.name)
+
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -89,7 +92,7 @@ class User(db.Model, UserMixin):
 
 
 class AnonymousUser(AnonymousUserMixin):
-    def can(self):
+    def can(self, permissions):
         return False
 
     def is_admin(self):

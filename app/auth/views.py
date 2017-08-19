@@ -3,7 +3,8 @@ from flask import redirect, request, url_for, flash, render_template
 
 from app.models import User
 from app.auth import auth
-from .forms import LoginForm
+from .forms import LoginForm, RegisterForm
+from app.extension import db
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -25,3 +26,16 @@ def logout():
     logout_user()
     flash('您已成功登出')
     return redirect(url_for('main.index'))
+
+
+@auth.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data,
+                    username=form.username.data,
+                    password=form.password.data)
+        db.session.add(user)
+        flash('注册成功')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/register.html', form=form)
