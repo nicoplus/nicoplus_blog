@@ -1,9 +1,10 @@
 import pytest
-from flask import current_app
 
 from app import create_app
 from app.models import User, Role, Permissions, AnonymousUser
 from app.extension import db
+
+import time
 
 
 class TestUserModel:
@@ -36,8 +37,8 @@ class TestUserModel:
     def test_verify_password(self, setup_func):
         u = User(username='john')
         u.password = 'cat'
-        assert u.verify_password('cat') == True
-        assert u.verify_password('dog') == False
+        assert u.verify_password('cat')
+        assert not u.verify_password('dog')
 
     def test_slat_is_random(self, setup_func):
         u = User(username='john')
@@ -48,10 +49,34 @@ class TestUserModel:
 
     def test_roles_and_permission(self, setup_func):
         u = User(username='john', email='john@qq.com')
-        assert u.can(Permissions.COMMENT) == True
-        #print(u.role)
-        assert u.can(Permissions.WRITE_ARTICLES) == False
+        assert u.can(Permissions.COMMENT)
+        # print(u.role)
+        assert not u.can(Permissions.WRITE_ARTICLES)
 
-    def test_anonymous(self, setup_func):
+    def test_anonymous(self):
         u = AnonymousUser()
-        assert u.can(Permissions.LIKE) == False
+        assert not u.can(Permissions.LIKE)
+
+    def test_valid_activation_token(self, setup_func):
+        u = User(username='john')
+        db.session.add(u)
+        db.session.commit()
+        token = u.generate_activation_token()
+        assert u.activate(token)
+
+    def test_invalid_activation_token(self, setup_func):
+        u1 = User(username='john')
+        u2 = User(username='tom')
+        db.session.add(u1)
+        db.session.add(u2)
+        db.session.commit()
+        token = u1.generate_activation_token()
+        assert not u2.activate(token)
+
+    def test_expired_activation_token(self, setup_func):
+        u = User(username='john')
+        db.session.add(u)
+        db.session.commit()
+        token = u.generate_activation_token(1)
+        time.sleep(4)
+        assert not u.activate(token)

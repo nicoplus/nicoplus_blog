@@ -106,7 +106,8 @@ class User(db.Model, UserMixin):
         self.password_hash = generate_password_hash(password)
 
     def can(self, permissions):
-        return self.role and (self.role.permissions & permissions) == permissions
+        return self.role and\
+            (self.role.permissions & permissions) == permissions
 
     def is_admin(self):
         return self.can(Permissions.ADMIN)
