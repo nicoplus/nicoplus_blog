@@ -24,4 +24,4 @@ class TestBasic:
         assert current_app is not None
 
     def test_app_is_testing(self, setup_function):
-        assert self.app.config['TESTING'] == True
+        assert self.app.config['TESTING']

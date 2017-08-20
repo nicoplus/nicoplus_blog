@@ -9,6 +9,7 @@ class Config:
     FLASK_ADMIN = os.environ.get('FLASK_ADMIN', None)
     FLASK_MAIL_SUBJECT_PREFIX = '[Nicoplus Blog]'
     FLASK_MAIL_SENDER = 'nicoplus@qq.com'
+    UPLOADED_PHOTOS_DEST = '/var/www/flask_blog/'
 
     @staticmethod
     def init_app(app):

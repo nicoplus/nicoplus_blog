@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_pagedown import PageDown
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_uploads import UploadSet, IMAGES, configure_uploads
 
 
 bootstrap = Bootstrap()
@@ -19,4 +20,7 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 from app.models import AnonymousUser
 login_manager.anonymous_user = AnonymousUser
+
 mail = Mail()
+
+photos = UploadSet('photos', IMAGES)

@@ -23,6 +23,14 @@ class Permissions:
     ADMIN = 0x80
 
 
+class Image(db.Model):
+    __tablename__ = 'images'
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String(64))
+    url_t = db.Column(db.String(64))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
@@ -62,7 +70,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     active = db.Column(db.Boolean, default=False)
-    role_id = db.Column('Role', db.ForeignKey('roles.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     def __init__(self, **kws):
         super(User, self).__init__(**kws)
@@ -127,8 +135,9 @@ class Post(db.Model):
     title = db.Column(db.String(64), nullable=False)
     body = db.Column(db.Text)
     created_at = db.Column(db.DateTime, index=True, default=datetime.now)
-    author_id = db.Column('User', db.ForeignKey('users.id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     body_html = db.Column(db.Text)
+    images = db.relationship('Image', backref='post', lazy='dynamic')
 
     def __repr__(self):
         return '<Post:{}>'.format(self.title)
@@ -148,12 +157,12 @@ class Post(db.Model):
 
     @staticmethod
     def on_changed_body(target, value, oldvalue, initiator):
-        print('change body is running')
         allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote',
                         'code', 'em', 'i', 'li', 'ol', 'pre',
                         'strong', 'ul', 'h1', 'h2', 'h3', 'p']
         target.body_html = bleach.linkify(bleach.clean(
-            markdown(value, output_format='html'), tags=allowed_tags, strip=True))
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
 
 
 db.event.listen(Post.body, 'set', Post.on_changed_body)
