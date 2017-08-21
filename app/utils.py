@@ -31,18 +31,21 @@ def create_thumbnail(image):
     w_percent = base_width / float(img.size[0])
     h_size = int(float(img.size[1]) * w_percent)
     img = img.resize((base_width, h_size))
-    img.save(os.path.join(current_app.config['UPLOADED_PHOTOS_DEST'], filename+'_t' + ext))
-    return url_for('main._uploaded_filename', filename=filename + '_t' + ext)
-    '''img_name = photos.save(img, name=filename + '_t.')
-    img_url = photos.url(img_name)
-    return img_url'''
+    img.save(os.path.join(
+        current_app.config['UPLOADED_PHOTOS_DEST'], filename + '_t' + ext))
+    return url_for('main._uploaded_filename',
+                   filename=filename + '_t' + ext,
+                   _external=True)
 
 
 def save_image(files):
     '''param:
             files:从request中获得的图片列表,需用files_getlist()。若不是列表，会抛出TypeError
        创建图片名；
-       创建缩略图尺寸图.'''
+       创建缩略图尺寸图.
+       warning:
+            werkzeug.utils.secure_filename使用ascii编码，不支持中文文件名。
+            需修改flask.uploads.extension()'''
     if not isinstance(files, list):
         raise TypeError('param files must be a list')
     images = []

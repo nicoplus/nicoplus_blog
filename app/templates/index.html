@@ -5,11 +5,16 @@
 <div id='mansory' class="row">
 {% for post in posts %}
 	<div class="thumbnail" data-order='{{ post.id }}'>
-		<img src="{{ post.image }}">
+		<img src="{{ post.images.first().url_t }}">
 		<div class="caption">
 			<h4><a href="{{ url_for('main.post', id=post.id) }}">{{post.title}}</a></h4>
 			<p>{{ post.body|truncate(30) }}</p>
 		</div>
+		{% if current_user.is_admin() %}
+		<div align="right">
+		<a href="{{ url_for('main.edit_post', post=post.id) }}" class='btn btn-primary'>编辑</a>
+		</div>
+		{% endif %}
 	</div>
 {% endfor %}
 </div>

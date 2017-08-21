@@ -3,18 +3,18 @@
 {% block title %}{{post.title}} | 文章{% endblock %}
 
 {% block page_content %}
-<div class="panel panel-primary">
-	<div class="panel-heading" align="center">
-		<h2>{{post.title}}</h2>
-		<small>时间:{{post.created_at | post_datetime}}</small>
+<div class="well" style="text-align:center; margin-bottom: -4px; background-color: #e3e3e3">
+	<h2>{{post.title}}</h2>
+	<small>时间:{{post.created_at | post_datetime}}</small>
+</div>
+<div style="border: 1px solid #e3e3e3; padding: 10px">
+	<div style="text-align: center">
+		<img src="{{ post.images.first().url_t }}" align="middle">
 	</div>
-	<div class="panel-body">
-		{% if post.body_html %}
-		<p>{{ post.body_html|safe }}</p>
-		{% else %}
-		<p>{{post.body}}</p>
-		{% endif %}
-	</div>
-	
+	{% if post.body_html %}
+	<p>{{ post.body_html|safe }}</p>
+	{% else %}
+	<p>{{post.body}}</p>
+	{% endif %}
 </div>
 {% endblock %}

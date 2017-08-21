@@ -14,3 +14,8 @@ class PostForm(FlaskForm):
     body = PageDownField('正文', validators=[Required()], render_kw={
                          'rows': 10, 'placeholder': '使用markdown语法'})
     submit = SubmitField('提交')
+
+
+class ImageForm(FlaskForm):
+    image = FileField('配图', validators=[FileRequired('你还没有上传图片'),
+                                        FileAllowed(photos, '只能上传图片')])
