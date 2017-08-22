@@ -137,6 +137,7 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, index=True, default=datetime.now)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     body_html = db.Column(db.Text)
+    activation = db.Column(db.Boolean, default=True)
     images = db.relationship('Image', backref='post', lazy='dynamic')
 
     def __repr__(self):

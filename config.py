@@ -10,6 +10,7 @@ class Config:
     FLASK_MAIL_SUBJECT_PREFIX = '[Nicoplus Blog]'
     FLASK_MAIL_SENDER = 'nicoplus@qq.com'
     UPLOADED_PHOTOS_DEST = '/var/www/flask_blog/'
+    FLASK_POSTS_PER_PAGE = 20
 
     @staticmethod
     def init_app(app):

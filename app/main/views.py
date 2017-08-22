@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for,\
-    request, send_from_directory, current_app, flash
+    request, send_from_directory, current_app, flash, jsonify
 from flask_login import login_required, current_user
 
 from app.models import Post, Permissions, Image
@@ -39,9 +39,13 @@ def inject_permissions():
 @main.route('/', methods=['GET'])
 def index():
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.order_by(Post.created_at.desc()).paginate(
-        page, per_page=current_app.config['FLASK_POSTS_PER_PAGE'], error_out=False)
-    return render_template('index.html')
+    pagination = Post.query.filter_by(activation=True).\
+    order_by(Post.created_at.desc()).paginate(
+        page,
+        per_page=current_app.config['FLASK_POSTS_PER_PAGE'],
+        error_out=False)
+    posts = pagination.items
+    return render_template('index.html', posts=posts, pagination=pagination)
 
 
 @main.route('/edit_post', methods=['GET', 'POST'])
@@ -64,7 +68,7 @@ def edit_post():
                 img.url_t = url[1]
             db.session.add(img)
             db.session.add(post)
-
+            flash('文章修改成功')
         else:
             post = Post(title=post_form.title.data,
                         body=post_form.body.data,
@@ -74,6 +78,7 @@ def edit_post():
             for url in images:
                 img = Image(url=url[0], url_t=url[1], post=post)
                 db.session.add(img)
+            flash('文章创建成功')
 
         return redirect(url_for('.index'))
 
@@ -95,15 +100,16 @@ def post(id):
 
 
 @main.route('/_uploaded/<filename>')
-@login_required
-@permission_required(Permissions.WRITE_ARTICLES)
 def _uploaded_filename(filename):
     return send_from_directory(
         current_app.config['UPLOADED_PHOTOS_DEST'], filename)
 
 
-@main.route('/delete/<id>', methods=[r"DELETE"])
+@main.route('/hide_post/<id>', methods=[r'PUT'])
 @login_required
 @admin_required
-def delete_post(id):
-    pass
+def hide_post(id):
+    post = Post.query.get_or_404(id)
+    post.activation = False
+    db.session.add(post)
+    return jsonify(success='delete success')
