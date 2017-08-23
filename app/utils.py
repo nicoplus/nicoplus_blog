@@ -10,13 +10,17 @@ import hashlib
 import os
 
 
-def send_email(to, subjct, template, **kw):
+def send_email(msg):
+    mail.send(msg)
+
+
+def get_msg(to, subjct, template, **kw):
     msg = Message(current_app.config['FLASK_MAIL_SUBJECT_PREFIX'] + subjct,
                   sender=current_app.config['FLASK_MAIL_SENDER'],
                   recipients=[to])
     msg.body = render_template(template + '.txt', **kw)
     msg.html = render_template(template + '.html', **kw)
-    mail.send(msg)
+    return msg
 
 
 def create_thumbnail(image):

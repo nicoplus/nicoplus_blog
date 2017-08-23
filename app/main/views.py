@@ -40,7 +40,7 @@ def inject_permissions():
 def index():
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.filter_by(activation=True).\
-    order_by(Post.created_at.desc()).paginate(
+        order_by(Post.created_at.desc()).paginate(
         page,
         per_page=current_app.config['FLASK_POSTS_PER_PAGE'],
         error_out=False)

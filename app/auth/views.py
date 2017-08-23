@@ -5,7 +5,7 @@ from app.models import User
 from app.auth import auth
 from .forms import LoginForm, RegisterForm
 from app.extension import db
-from app.utils import send_email
+from app.utils import send_email, get_msg
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -39,8 +39,11 @@ def register():
         db.session.add(user)
         db.session.commit()
         token = user.generate_activation_token()
-        send_email(user.email, '激活账户',
-                   'auth/email/activate', token=token, user=user)
+        msg = get_msg(user.email, '激活账户',
+                      'auth/email/activate', token=token, user=user)
+        #send_email(msg)
+        from app.tasks import async_send_email
+        async_send_email.delay(msg)
         flash('请登录你的注册邮箱，激活账户')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)

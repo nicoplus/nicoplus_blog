@@ -1,11 +1,20 @@
 from flask import Flask
+from celery import Celery
 
 from app.extension import bootstrap, toolbar, db, pagedown,\
     login_manager, mail, photos, configure_uploads
 from config import config
 
 
-def create_app(config_name):
+def create_app(config_name=None):
+    '''传入配置名：
+            'development'
+            'testing'
+            'production'
+            'default'(development模式)
+            如若为None则为default
+            '''
+    config_name = config_name or 'default'
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
@@ -25,3 +34,20 @@ def create_app(config_name):
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
     return app
+
+
+def create_celery_app(app=None):
+    app = app or create_app()
+    celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+    celery.conf.update(app.config)
+    TaskBase = celery.Task
+
+    class ContextTask(TaskBase):
+        abstract = True
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return super(TaskBase, self).__call__(*args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery

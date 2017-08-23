@@ -12,6 +12,9 @@ class Config:
     UPLOADED_PHOTOS_DEST = '/var/www/flask_blog/'
     FLASK_POSTS_PER_PAGE = 20
 
+    CELERY_BROKER_URL = 'redis://localhost:6379/0'
+    CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'pickle']
+
     @staticmethod
     def init_app(app):
         pass
