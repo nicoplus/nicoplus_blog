@@ -48,7 +48,7 @@ def index():
     return render_template('index.html', posts=posts, pagination=pagination)
 
 
-@main.route('/edit_post', methods=['GET', 'POST'])
+@main.route('/edit_post/', methods=['GET', 'POST'])
 @login_required
 @permission_required(Permissions.WRITE_ARTICLES)
 def edit_post():
@@ -92,20 +92,20 @@ def edit_post():
                            post_form=post_form, img_url=img_url)
 
 
-@main.route('/post/<int:id>', methods=['GET'])
+@main.route('/post/<int:id>/', methods=['GET'])
 def post(id):
     post = Post.query.get_or_404(id)
     print(type(post.created_at))
     return render_template('post.html', post=post)
 
 
-@main.route('/_uploaded/<filename>')
+@main.route('/_uploaded/<filename>/')
 def _uploaded_filename(filename):
     return send_from_directory(
         current_app.config['UPLOADED_PHOTOS_DEST'], filename)
 
 
-@main.route('/hide_post/<id>', methods=[r'PUT'])
+@main.route('/hide_post/<id>/', methods=[r'PUT'])
 @login_required
 @admin_required
 def hide_post(id):

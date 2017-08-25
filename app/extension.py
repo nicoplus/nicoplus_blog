@@ -5,6 +5,7 @@ from flask_pagedown import PageDown
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_uploads import UploadSet, IMAGES, configure_uploads
+from flask_admin import Admin
 
 
 bootstrap = Bootstrap()
@@ -24,3 +25,5 @@ login_manager.anonymous_user = AnonymousUser
 mail = Mail()
 
 photos = UploadSet('photos', IMAGES)
+
+admin = Admin(name='后台系统', template_mode='bootstrap3')

@@ -8,7 +8,7 @@ from app.extension import db
 from app.utils import send_email, get_msg
 
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/login/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -21,7 +21,7 @@ def login():
     return render_template('auth/login.html', form=form)
 
 
-@auth.route('/logout', methods=['GET'])
+@auth.route('/logout/', methods=['GET'])
 @login_required
 def logout():
     logout_user()
@@ -29,7 +29,7 @@ def logout():
     return redirect(url_for('main.index'))
 
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth.route('/register/', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
@@ -49,7 +49,7 @@ def register():
     return render_template('auth/register.html', form=form)
 
 
-@auth.route('/activate/<token>', methods=['GET'])
+@auth.route('/activate/<token>/', methods=['GET'])
 @login_required
 def activate(token):
     if current_user.active:

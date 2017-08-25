@@ -2,7 +2,7 @@ from flask import Flask
 from celery import Celery
 
 from app.extension import bootstrap, toolbar, db, pagedown,\
-    login_manager, mail, photos, configure_uploads
+    login_manager, mail, photos, configure_uploads, admin
 from config import config
 
 
@@ -26,6 +26,11 @@ def create_app(config_name=None):
     login_manager.init_app(app)
     mail.init_app(app)
     configure_uploads(app, photos)
+
+    from . import admin_view
+    if admin.app is None:
+        admin.init_app(app)
+
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
