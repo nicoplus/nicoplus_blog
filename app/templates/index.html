@@ -6,7 +6,10 @@
 <div id='mansory' class="row">
 {% for post in posts %}
 	<div class="thumbnail" data-order='{{ post.id }}'>
+		{% if post.images %}
 		<img src="{{ post.images.first().url_t }}">
+		{% endif %}
+
 		<div class="caption">
 			<h4><a href="{{ url_for('main.post', id=post.id) }}">{{post.title}}</a></h4>
 			<p>{{ post.body|truncate(30) }}</p>

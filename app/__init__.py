@@ -5,6 +5,9 @@ from app.extension import bootstrap, toolbar, db, pagedown,\
     login_manager, mail, photos, configure_uploads, admin
 from config import config
 
+import logging
+from logging.handlers import RotatingFileHandler
+
 
 def create_app(config_name=None):
     '''传入配置名：
@@ -27,10 +30,11 @@ def create_app(config_name=None):
     mail.init_app(app)
     configure_uploads(app, photos)
 
+    create_slow_query_handler(app)
+
     from . import admin_view
     if admin.app is None:
         admin.init_app(app)
-
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
@@ -56,3 +60,13 @@ def create_celery_app(app=None):
 
     celery.Task = ContextTask
     return celery
+
+
+def create_slow_query_handler(app):
+    formatter = logging.Formatter(
+        "[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s")
+    handler = RotatingFileHandler(
+        'slow_query.log', maxBytes=10000, backupCount=10)
+    handler.setLevel(logging.WARNING)
+    handler.setFormatter(formatter)
+    app.logger.addHandler(handler)

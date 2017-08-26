@@ -10,32 +10,6 @@ from app.decorators import permission_required, admin_required
 from app.utils import save_image
 
 
-@main.after_app_request
-def session_commit(resp, *args, **kws):
-    db.session.commit()
-    return resp
-
-
-@main.teardown_app_request
-def session_remove(exception=None):
-    try:
-        db.session.remove()
-    except Exception as e:
-        print(e)
-    finally:
-        pass
-
-
-@main.app_template_filter('post_datetime')
-def post_datetime(datetime):
-    return datetime.strftime('%Y-%m-%d %H:%M')
-
-
-@main.app_context_processor
-def inject_permissions():
-    return dict(Permissions=Permissions)
-
-
 @main.route('/', methods=['GET'])
 def index():
     page = request.args.get('page', 1, type=int)
