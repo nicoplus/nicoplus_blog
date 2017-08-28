@@ -8,6 +8,8 @@ from PIL import Image
 import time
 import hashlib
 import os
+import logging
+from logging.handlers import RotatingFileHandler
 
 
 def send_email(msg):
@@ -62,3 +64,15 @@ def save_image(files):
         images.append((file_url, file_url_t))
     print('images-----------', images)
     return images
+
+
+def create_slow_query_handler(app):
+    log_path = ''.join([(os.path.dirname(app.root_path)), '/slow_query.log'])
+    if os.path.exists(log_path):
+        return
+    formatter = logging.Formatter(
+        "[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s")
+    handler = RotatingFileHandler(log_path, maxBytes=10000, backupCount=10)
+    handler.setLevel(logging.WARNING)
+    handler.setFormatter(formatter)
+    app.logger.addHandler(handler)

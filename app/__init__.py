@@ -4,9 +4,7 @@ from celery import Celery
 from app.extension import bootstrap, toolbar, db, pagedown,\
     login_manager, mail, photos, configure_uploads, admin
 from config import config
-
-import logging
-from logging.handlers import RotatingFileHandler
+from app.utils import create_slow_query_handler
 
 
 def create_app(config_name=None):
@@ -62,11 +60,4 @@ def create_celery_app(app=None):
     return celery
 
 
-def create_slow_query_handler(app):
-    formatter = logging.Formatter(
-        "[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s")
-    handler = RotatingFileHandler(
-        'slow_query.log', maxBytes=10000, backupCount=10)
-    handler.setLevel(logging.WARNING)
-    handler.setFormatter(formatter)
-    app.logger.addHandler(handler)
+
