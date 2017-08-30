@@ -14,6 +14,10 @@ def session_commit(resp, *args, **kws):
 
 @main.after_app_request
 def slow_query(resp, *args, **kws):
+    query = False
+    if not query:
+        return resp
+
     for query in get_debug_queries():
         if query.duration >= current_app.config['DATABASE_QUERY_TIMEOUT']:
             current_app.logger.warn(

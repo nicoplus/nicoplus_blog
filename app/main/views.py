@@ -8,9 +8,11 @@ from app.main.forms import PostForm
 from app.extension import db
 from app.decorators import permission_required, admin_required
 from app.utils import save_image
+from app.mc import cache
 
 
 @main.route('/', methods=['GET'])
+@cache('main', expire=30)
 def index():
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.filter_by(activation=True).\
@@ -67,9 +69,9 @@ def edit_post():
 
 
 @main.route('/post/<int:id>/', methods=['GET'])
+@cache('main', expire=60 * 60)
 def post(id):
     post = Post.query.get_or_404(id)
-    print(type(post.created_at))
     return render_template('post.html', post=post)
 
 
