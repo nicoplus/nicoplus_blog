@@ -66,9 +66,14 @@ def save_image(files):
     return images
 
 
-def create_slow_query_handler(app):
+def create_slow_query_handler(app, enabled=True):
+    '''
+    para:
+        app: accept an flask instance
+        enabled: if enabled is False, the func is halt when reloaded.
+    '''
     log_path = ''.join([(os.path.dirname(app.root_path)), '/slow_query.log'])
-    if os.path.exists(log_path):
+    if not enabled:
         return
     formatter = logging.Formatter(
         "[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s")
@@ -76,3 +81,4 @@ def create_slow_query_handler(app):
     handler.setLevel(logging.WARNING)
     handler.setFormatter(formatter)
     app.logger.addHandler(handler)
+

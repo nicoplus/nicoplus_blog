@@ -12,15 +12,10 @@ from app.mc import cache
 
 
 @main.route('/', methods=['GET'])
-@cache('main', expire=30)
 def index():
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.filter_by(activation=True).\
-        order_by(Post.created_at.desc()).paginate(
-        page,
-        per_page=current_app.config['FLASK_POSTS_PER_PAGE'],
-        error_out=False)
-    posts = pagination.items
+    pagination, posts = get_pagination_posts(page)
+
     return render_template('index.html', posts=posts, pagination=pagination)
 
 
@@ -89,3 +84,16 @@ def hide_post(id):
     post.activation = False
     db.session.add(post)
     return jsonify(success='delete success')
+
+
+@cache('main', expire=30)
+def get_pagination_posts(page=1):
+    pagination = Post.query.filter_by(activation=True).\
+        order_by(Post.created_at.desc()).paginate(
+        page,
+        per_page=current_app.config['FLASK_POSTS_PER_PAGE'],
+        error_out=False)
+    posts = pagination.items
+
+    return pagination, posts
+

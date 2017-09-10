@@ -36,8 +36,11 @@ def gen_key_factory(prefix, arg_names, defaults):
 
 def cache(prefix, mc, expire=MC_DEFAULT_EXPIRE, max_retry=0):
     '''
+    prefix: suggest that it is name of blueprint or class
     mc: libmc instance
     expire: expire time, unit is seconds
+
+    the func is a decorator, can add result of decorated func to memcached.
     '''
 
     def deco(f):
@@ -50,13 +53,9 @@ def cache(prefix, mc, expire=MC_DEFAULT_EXPIRE, max_retry=0):
         def deco_func(*a, **kws):
             key = gen_key(f, *a, **kws)
             r = mc.get(key)
-            print(type(r))
-            print(key)
             retry = max_retry
             while r is None and retry > 0:
-                print('mc invalid')
                 if mc.add(key + '#mutex', 1, int(max_retry * 0.1)):
-                    print('add mutex')
                     break
 
                 time.sleep(1)
@@ -65,10 +64,13 @@ def cache(prefix, mc, expire=MC_DEFAULT_EXPIRE, max_retry=0):
 
             if r is None:
                 r = f(*a, **kws)
+
                 if r is not None:
                     mc.set(key, r, expire)
+
                 if retry > 0:
                     mc.delete(key + '#mutex')
+
             return r
 
         return deco_func
@@ -76,6 +78,6 @@ def cache(prefix, mc, expire=MC_DEFAULT_EXPIRE, max_retry=0):
 
 
 def create_cache(mc):
-    def _cache(prefix, mc=mc, expire=MC_DEFAULT_EXPIRE, max_retry=5):
-        return cache(prefix, mc=mc, expire=expire, max_retry=max_retry)
+    def _cache(prefix='', mc=mc, expire=MC_DEFAULT_EXPIRE, max_retry=5):
+        return cache(prefix=prefix, mc=mc, expire=expire, max_retry=max_retry)
     return {'cache': _cache}
