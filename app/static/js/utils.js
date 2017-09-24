@@ -1,5 +1,5 @@
-var show_mansory = function() {
-	$('#mansory').mpmansory({
+var show_mansory = function(mansory_obj) {
+	mansory_obj.mpmansory({
 	  childrenClass: '', // default is a div
 	     columnClasses: '', //add classes to items
 	     breakpoints:{
@@ -15,17 +15,32 @@ var show_mansory = function() {
 	});
 };
 
-var delete_post = function(post_id) {
-	var id = post_id;
-	$('#delete-'+id).click(function(){
-		$.ajax({
-			type:'PUT',
-			url:'/hide_post/'+id,
-			success:function(response){
-				log(response);
-				window.location.reload();
-			},
-		});
+var event_hide = function(event){
+	
+		self = event.target
+		id = self.id
+		log('target click', self.id)
+		if (id.indexOf('hide-') != -1) {
+			log('exist')
+			hide_post(self.dataset.post)
+		} else {
+			//log('not exist')
+		}
 
+}
+
+
+var hide_post = function(post_id) {
+	var id = post_id;
+	//log('click', id)
+	$.ajax({
+		type:'PUT',
+		url:'/hide_post/'+id+'/',
+		success:function(response){
+			log(response);
+			window.location.reload();
+		},
 	});
+
 };
+

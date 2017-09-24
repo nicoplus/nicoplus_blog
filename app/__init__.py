@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from celery import Celery
 
@@ -44,7 +46,7 @@ def create_app(config_name=None):
 
 
 def create_celery_app(app=None):
-    app = app or create_app()
+    app = app or create_app(config_name=os.environ.get('FLASK_CONFIG'))
     celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
     celery.conf.update(app.config)
     TaskBase = celery.Task

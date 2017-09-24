@@ -17,7 +17,7 @@
 		{% if current_user.is_admin() %}
 		<div align="right">
 		<a href="{{ url_for('main.edit_post', post=post.id) }}" class='btn btn-default'>编辑</a>
-		<button class="btn btn-danger" id='delete-{{post.id}}'>隐藏</button>
+		<button class="btn btn-danger" id='hide-{{post.id}}' data-post='{{ post.id }}'>隐藏</button>
 		</div>
 		{% endif %}
 	</div>
@@ -38,10 +38,13 @@
 	var log = console.log.bind(console);
 	$(document).ready(function(){
 		//瀑布流mansory
-		show_mansory();
-		{% for p in posts %}
-		delete_post({{p.id}});
-		{% endfor %}
+		var mansory = $('#mansory')
+		show_mansory(mansory);
+		mansory.bind('click', event_hide)
+		//event_hide_listener(mansory)
+
 	});
+
+
 </script>
 {% endblock %}
