@@ -37,10 +37,11 @@ def create_thumbnail(image):
     w_percent = base_width / float(img.size[0])
     h_size = int(float(img.size[1]) * w_percent)
     img = img.resize((base_width, h_size))
+    filename_t = filename + '_t' + ext
     img.save(os.path.join(
-        current_app.config['UPLOADED_PHOTOS_DEST'], filename + '_t' + ext))
+        current_app.config['UPLOADED_PHOTOS_DEST'], filename_t))
     return url_for('main._uploaded_filename',
-                   filename=filename + '_t' + ext,
+                   filename=filename_t,
                    _external=True)
 
 
@@ -52,8 +53,6 @@ def save_image(files):
        warning:
             werkzeug.utils.secure_filename使用ascii编码，不支持中文文件名。
             需修改flask.uploads.extension()'''
-    if not isinstance(files, list):
-        raise TypeError('param files must be a list')
     images = []
     for img in files:
         filename = hashlib.md5((current_user.username +
@@ -64,6 +63,7 @@ def save_image(files):
         images.append((file_url, file_url_t))
     print('images-----------', images)
     return images
+
 
 
 def create_slow_query_handler(app, enabled=True):
@@ -81,4 +81,3 @@ def create_slow_query_handler(app, enabled=True):
     handler.setLevel(logging.WARNING)
     handler.setFormatter(formatter)
     app.logger.addHandler(handler)
-

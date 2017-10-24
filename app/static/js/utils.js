@@ -17,12 +17,12 @@ var show_mansory = function(mansory_obj) {
 
 var event_hide = function(event){
 	
-		self = event.target
-		id = self.id
-		log('target click', self.id)
+		var self = event.target
+		var id = self.id
+		// log('target click', self.id)
 		if (id.indexOf('hide-') != -1) {
 			log('exist')
-			hide_post(self.dataset.post)
+			hide_post(self.dataset.post, self)
 		} else {
 			//log('not exist')
 		}
@@ -30,15 +30,17 @@ var event_hide = function(event){
 }
 
 
-var hide_post = function(post_id) {
+var hide_post = function(post_id, obj) {
 	var id = post_id;
 	//log('click', id)
+	log('parent obj', obj)
 	$.ajax({
 		type:'PUT',
 		url:'/hide_post/'+id+'/',
 		success:function(response){
 			log(response);
-			window.location.reload();
+			var thumbnailParent =  obj.closest('.thumbnail')
+			thumbnailParent.remove()
 		},
 	});
 

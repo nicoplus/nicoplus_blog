@@ -86,7 +86,7 @@ def hide_post(id):
     return jsonify(success='delete success')
 
 
-@cache('main', expire=30)
+# @cache('main', expire=30)
 def get_pagination_posts(page=1):
     pagination = Post.query.filter_by(activation=True).\
         order_by(Post.created_at.desc()).paginate(

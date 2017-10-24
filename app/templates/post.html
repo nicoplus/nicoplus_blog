@@ -3,12 +3,12 @@
 {% block title %}{{post.title}} | 文章{% endblock %}
 
 {% block page_content %}
-<div class="well" style="text-align:center; margin-bottom: -4px; background-color: #e3e3e3">
+<div class="well well-post" >
 	<h2>{{post.title}}</h2>
 	<small>时间:{{post.created_at | post_datetime}}</small>
 </div>
-<div style="border: 1px solid #e3e3e3; padding: 10px">
-	<div style="text-align: center">
+<div class="post-body">
+	<div class="post-text-center">
 		<img src="{{ post.images.first().url_t }}" align="middle">
 	</div>
 	{% if post.body_html %}

@@ -5,15 +5,16 @@
 
 {% block head %}
 {{ super() }}
-<script
-  src="https://code.jquery.com/jquery-2.2.4.min.js"
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
   crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nicoplus.css') }}">
 
 {% endblock %}
 
 {% block navbar %}
-<div class="navbar navbar-inverse" role='navigation'>
+<div class="navbar navbar-inverse navbar-fixed" role='navigation'>
 	<div class="container">
 		<div class="navbar-header">
 			<button type='button' class="navbar-toggle" data-toggle='collapse' data-target='.navbar-collapse'>
@@ -51,15 +52,18 @@
 {% endblock %}
 
 {% block content %}
-{% for m in get_flashed_messages() %}
-<div class="alert alert-info">
-	<button type="button" class="close" data-dismiss='alert'>&times;</button>
-	{{ m }}
+<div class="container-below-fixed">
+	{% for m in get_flashed_messages() %}
+	<div class="alert alert-info">
+		<button type="button" class="close" data-dismiss='alert'>&times;</button>
+		{{ m }}
+	</div>
+	{% endfor %}
+	<div class="container">
+		{% block page_content %}{% endblock %}
+	</div>
 </div>
-{% endfor %}
-<div class="container">
-	{% block page_content %}{% endblock %}
-</div>
+
 {% include 'footer.html' %}
 {% endblock %}
 

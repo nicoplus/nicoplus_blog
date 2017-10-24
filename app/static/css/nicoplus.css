@@ -1,0 +1,25 @@
+.navbar-fixed {
+    position: fixed;
+    z-index: 100;
+    top: 0px;
+    width: 100%;
+}
+
+.container-below-fixed {
+	margin-top: 70px;
+}
+
+.post-well {
+	text-align:center; 
+	margin-bottom: -4px; 
+	background-color: #e3e3e3;
+}
+
+.post-body {
+	border: 1px solid #e3e3e3; 
+	padding: 10px;
+}
+
+.post-text-center {
+	text-align: center;
+}

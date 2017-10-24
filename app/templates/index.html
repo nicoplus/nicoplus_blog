@@ -31,8 +31,8 @@
 
 {% block scripts %}
 {{super()}}
-<script src='{{ url_for('static', filename='js/mp.mansory.js') }}'></script>
-<script src='{{ url_for('static', filename='js/utils.js') }}'></script>
+<script src="{{ url_for('static', filename='js/mp.mansory.js') }}"></script>
+<script src="{{ url_for('static', filename='js/utils.js') }}"></script>
 
 <script>
 	var log = console.log.bind(console);
