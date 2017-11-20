@@ -1,3 +1,5 @@
+var log = console.log.bind(console);
+
 var show_mansory = function(mansory_obj) {
 	mansory_obj.mpmansory({
 	  childrenClass: '', // default is a div
@@ -45,4 +47,8 @@ var hide_post = function(post_id, obj) {
 	});
 
 };
+
+var qs = function(query) {
+	return document.querySelector(query)
+}
 

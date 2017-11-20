@@ -23,3 +23,12 @@
 .post-text-center {
 	text-align: center;
 }
+
+.dropzone-custom {
+	width: 50%;
+	margin: 0 auto;
+	margin-bottom: 10px;
+	border-radius: 4px;
+}
+
+

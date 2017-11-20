@@ -1,7 +1,7 @@
 from flask_bootstrap import Bootstrap
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
-from flask_pagedown import PageDown
+from app.flask_pagedown import PageDown
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_uploads import UploadSet, IMAGES, configure_uploads
